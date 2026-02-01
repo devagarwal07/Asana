@@ -13,8 +13,8 @@ const SpecialOccasions = () => {
 
   const mainImage = "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/images/60ba18cf58b7206b0a233bef_alexander-kaunas-TAgGZWz6-10.jpg";
 
-  return (
-    <section className="bg-[#F1EFE9] section-padding relative overflow-hidden">
+    return (
+      <section className="relative z-10 bg-[#F1EFE9] section-padding overflow-hidden shadow-[0_-50px_100px_rgba(0,0,0,0.05)]">
       {/* Decorative leaf icon */}
       <motion.div 
         initial={{ opacity: 0, x: -50 }}

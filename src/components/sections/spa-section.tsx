@@ -7,8 +7,8 @@ import { motion } from 'framer-motion';
 const SpaSection = () => {
   return (
     <section className="width-full">
-      {/* Absolute Full Width Atmospheric Image Section */}
-      <div className="relative w-full h-[600px] overflow-hidden">
+      {/* Sticky Atmospheric Image Section */}
+      <div className="sticky top-0 w-full h-screen overflow-hidden z-0">
         <motion.div
           initial={{ scale: 1.1 }}
           whileInView={{ scale: 1 }}
@@ -27,7 +27,7 @@ const SpaSection = () => {
       </div>
 
       {/* Spa Content Section */}
-      <div className="bg-[#F1EFE9] pt-[120px] pb-[120px] relative">
+      <div className="bg-[#F1EFE9] pt-[120px] pb-[120px] relative z-10 shadow-[0_-50px_100px_rgba(0,0,0,0.1)]">
         {/* Decorative Leaf Element - Left */}
         <motion.div 
           initial={{ opacity: 0, x: -30 }}

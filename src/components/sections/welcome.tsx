@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 
 const WelcomeSection: React.FC = () => {
   return (
-    <section className="relative bg-[#F1EFE9] pt-[120px] pb-[120px] overflow-hidden">
+    <section className="relative z-10 bg-[#F1EFE9] pt-[120px] pb-[120px] overflow-hidden shadow-[0_-50px_100px_rgba(0,0,0,0.05)]">
       <div className="container mx-auto px-8 max-w-[1280px]">
         <div className="flex flex-col items-center text-center mb-24 relative z-10">
           {/* Top Label */}

@@ -12,10 +12,10 @@ import { motion } from 'framer-motion';
  */
 
 const QuoteNewsletter = () => {
-  return (
-    <div className="flex flex-col w-full">
-      {/* Brand Quote Section */}
-      <section className="bg-[#F1EFE9] section-padding px-8 md:px-0 relative overflow-hidden">
+    return (
+      <div className="flex flex-col w-full relative z-10">
+        {/* Brand Quote Section */}
+        <section className="bg-[#F1EFE9] section-padding px-8 md:px-0 relative overflow-hidden shadow-[0_-50px_100px_rgba(0,0,0,0.05)]">
         {/* Decorative leaf art */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
