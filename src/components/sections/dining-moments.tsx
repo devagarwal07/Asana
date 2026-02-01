@@ -43,8 +43,8 @@ const DiningMoments = () => {
         </motion.div>
       </div>
 
-      {/* Main Full-Width Image Section (Woman in Hammock) */}
-      <section className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden">
+      {/* Main Full-Width Image Section (Woman in Hammock) - Sticky Background */}
+      <div className="sticky top-0 w-full h-screen overflow-hidden z-0">
         <motion.div
           initial={{ scale: 1.1 }}
           whileInView={{ scale: 1 }}
@@ -61,10 +61,10 @@ const DiningMoments = () => {
             sizes="100vw"
           />
         </motion.div>
-      </section>
+      </div>
 
       {/* Content Section */}
-      <section className="bg-[#F1EFE9] px-6 py-24 md:py-32">
+      <section className="bg-[#F1EFE9] px-6 py-24 md:py-32 relative z-10 shadow-[0_-50px_100px_rgba(0,0,0,0.1)]">
         <div className="container mx-auto max-w-[1280px]">
           <div className="text-center flex flex-col items-center">
             {/* Tagline */}

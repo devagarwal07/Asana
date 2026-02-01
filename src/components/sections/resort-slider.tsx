@@ -31,8 +31,8 @@ const ResortSlider = () => {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   }, [slides.length]);
 
-  return (
-    <section className="relative w-full overflow-hidden bg-[#F1EFE9]">
+    return (
+      <section className="relative z-10 w-full overflow-hidden bg-[#F1EFE9]">
       <div className="slider-wrapper relative h-[400px] md:h-[600px] lg:h-[800px] w-full">
         {/* Slides */}
         <div className="relative h-full w-full">

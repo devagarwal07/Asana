@@ -32,8 +32,8 @@ const rooms = [
 ];
 
 const RoomsSuites = () => {
-  return (
-    <section className="bg-[#F1EFE9] py-[120px]">
+    return (
+      <section className="relative z-10 bg-[#F1EFE9] py-[120px] shadow-[0_-50px_100px_rgba(0,0,0,0.05)]">
       <div className="container mx-auto px-8 max-w-[1280px]">
         {/* Header */}
         <div className="mb-[60px]">
