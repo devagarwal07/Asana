@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 const rooms = [
   {
@@ -36,19 +37,38 @@ const RoomsSuites = () => {
       <div className="container mx-auto px-8 max-w-[1280px]">
         {/* Header */}
         <div className="mb-[60px]">
-          <h4 className="label-caps mb-4 uppercase tracking-[0.15em] text-[12px] font-medium text-[#C06B3E]">
+          <motion.h4 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="label-caps mb-4 uppercase tracking-[0.15em] text-[12px] font-medium text-[#C06B3E]"
+          >
             relax Surrounded by nature
-          </h4>
-          <h2 className="font-display text-[48px] leading-[1.2] text-[#222222]">
+          </motion.h4>
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="font-display text-[48px] leading-[1.2] text-[#222222]"
+          >
             Rooms & Suites
-          </h2>
+          </motion.h2>
         </div>
 
         {/* Carousel / Grid Container */}
         <div className="relative">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {rooms.map((room, index) => (
-              <div key={index} className="group cursor-pointer">
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 + index * 0.15 }}
+                className="group cursor-pointer"
+              >
                 {/* Image Wrapper */}
                 <div className="relative overflow-hidden aspect-[4/3] mb-6">
                   <Image
@@ -106,12 +126,18 @@ const RoomsSuites = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Navigation Arrows */}
-          <div className="flex gap-3 mt-12">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="flex gap-3 mt-12"
+          >
             <button 
               className="w-10 h-10 rounded-full border border-[#D6D2C4] flex items-center justify-center hover:bg-[#C06B3E] hover:border-[#C06B3E] transition-colors group"
               aria-label="Previous slide"
@@ -136,7 +162,7 @@ const RoomsSuites = () => {
                 className="invert"
               />
             </button>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

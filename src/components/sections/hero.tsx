@@ -2,12 +2,16 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 const HeroSection = () => {
   return (
     <div className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden">
       {/* Background Image */}
-      <div 
+      <motion.div 
+        initial={{ scale: 1.1 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
         className="absolute inset-0 z-0 bg-cover bg-center"
         style={{ 
           backgroundImage: `url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/images/60b501c8f9cb836be412f7d3_hero-homepage-13.jpg')`,
@@ -21,18 +25,33 @@ const HeroSection = () => {
 
       {/* Main Content Area */}
       <div className="relative z-10 flex-grow flex flex-col items-center justify-center text-center px-4 pt-20">
-        <div className="max-w-[1160px] w-full animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+          className="max-w-[1160px] w-full"
+        >
           <h1 className="hero-title text-white mb-6">
             Find your nature self
           </h1>
-          <div className="text-white font-body text-[18px] md:text-[22px] tracking-wide opacity-90 mx-auto max-w-2xl leading-relaxed">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.9 }}
+            transition={{ duration: 1, delay: 1, ease: "easeOut" }}
+            className="text-white font-body text-[18px] md:text-[22px] tracking-wide mx-auto max-w-2xl leading-relaxed"
+          >
             Asana is a wellness resort in the green hills of Vietnam
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Local Info (Time/Weather) - Left Side */}
-      <div className="relative z-20 w-full max-w-[1280px] mx-auto px-8 mb-4">
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 1.2 }}
+        className="relative z-20 w-full max-w-[1280px] mx-auto px-8 mb-4"
+      >
         <div className="flex flex-col gap-3 md:gap-4 md:flex-row items-start md:items-center">
           <div className="flex items-center gap-2 group cursor-pointer">
             <img 
@@ -51,10 +70,15 @@ const HeroSection = () => {
             <span className="text-white text-[14px] md:text-[15px] font-body tracking-[0.05em]">Sunny, 24° C</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Booking Bar */}
-      <div className="relative z-20 w-full bg-[#2A4434]">
+      <motion.div 
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, delay: 1.5, ease: "easeOut" }}
+        className="relative z-20 w-full bg-[#2A4434]"
+      >
         <div className="max-w-[1280px] mx-auto">
           <form className="flex flex-col lg:flex-row w-full">
             {/* Check In */}
@@ -135,7 +159,7 @@ const HeroSection = () => {
             </button>
           </form>
         </div>
-      </div>
+      </motion.div>
 
       <style jsx global>{`
         .hero-title {
