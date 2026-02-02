@@ -1,117 +1,205 @@
 "use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import React, { useRef } from "react";
+import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { ScrollReveal, Parallax, ImageReveal, TextReveal } from "@/components/ui/scroll-animations";
 
-/**
- * WelcomeSection Component
- * 
- * Featured descriptive text intro, a vector map of Vietnam, 
- * and two floating stylized images overlapping the map.
- */
+const stats = [
+  { value: "25+", label: "Years of Excellence" },
+  { value: "150+", label: "Luxury Rooms" },
+  { value: "50K+", label: "Happy Guests" },
+  { value: "5", label: "Star Rating" },
+];
 
 const WelcomeSection: React.FC = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const backgroundY = useTransform(smoothProgress, [0, 1], ["0%", "30%"]);
+  const floatingY = useTransform(smoothProgress, [0, 1], [100, -100]);
+  const floatingRotate = useTransform(smoothProgress, [0, 1], [8, -8]);
+
   return (
-    <section className="relative z-10 bg-[#F1EFE9] pt-[120px] pb-[120px] overflow-hidden shadow-[0_-50px_100px_rgba(0,0,0,0.05)]">
-      <div className="container mx-auto px-8 max-w-[1280px]">
-        <div className="flex flex-col items-center text-center mb-24 relative z-10">
-          {/* Top Label */}
-          <motion.h4 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="font-body text-[12px] font-medium uppercase tracking-[0.15em] text-[#C06B3E] mb-6"
-          >
-            Welcome to Asana Retreat
-          </motion.h4>
-          
-          {/* Main Heading */}
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-display text-[60px] leading-[1.1] text-[#222222] mb-8 max-w-[800px] text-balance"
-          >
-            Welcome to Asana Retreat
-          </motion.h1>
-          
-          {/* Descriptive Subtitle */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="font-body text-[16px] leading-[1.6] text-[#222222] max-w-[660px] opacity-80 text-balance"
-          >
-            Located in the green hills of Vietnam, Asana provides an exceptional wellness retreat for those who want to have deep connection with nature and lose themselves in the wisdom of culture.
-          </motion.div>
+    <section
+      ref={sectionRef}
+      id="explore"
+      className="relative z-10 bg-background section-padding overflow-hidden"
+    >
+      {/* Decorative Background Pattern */}
+      <motion.div
+        style={{ y: backgroundY }}
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+      >
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 1L1 25v50l49 24 49-24V25L50 1z' fill='none' stroke='%231E3A2F' stroke-width='0.5'/%3E%3C/svg%3E")`,
+            backgroundSize: "100px 100px",
+          }}
+        />
+      </motion.div>
+
+      <div className="container relative z-10">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          {/* Left: Text Content */}
+          <div className="order-2 lg:order-1">
+            <ScrollReveal direction="up" distance={60} scale={true}>
+              <span className="label-caps block mb-4">
+                Welcome to Asana
+              </span>
+            </ScrollReveal>
+
+            <TextReveal>
+              <h2 className="text-foreground mb-6 text-balance">
+                A World-Class
+                <br />
+                <span className="italic text-secondary">5-Star Retreat</span>
+              </h2>
+            </TextReveal>
+
+            <ScrollReveal direction="up" distance={40} scale={false}>
+              <div className="divider mb-8" />
+            </ScrollReveal>
+
+            <ScrollReveal direction="up" distance={50} blur={true}>
+              <p className="text-muted-foreground text-[17px] leading-[1.9] mb-6 max-w-[520px]">
+                Nestled in the lush highlands of Vietnam, Asana Resort represents
+                the pinnacle of luxury hospitality. Our award-winning property
+                offers an unparalleled experience of elegance, comfort, and
+                world-class service.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal direction="up" distance={50} blur={true}>
+              <p className="text-muted-foreground text-[17px] leading-[1.9] mb-10 max-w-[520px]">
+                From our Michelin-inspired cuisine to our exclusive spa sanctuary,
+                every detail has been meticulously crafted for the most discerning
+                travelers seeking the extraordinary.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal direction="up" distance={40}>
+              <a href="/about" className="btn-primary inline-block mr-4">
+                Discover Our Story
+              </a>
+              <a href="/rooms" className="btn-outline inline-block">
+                View Accommodations
+              </a>
+            </ScrollReveal>
+          </div>
+
+          {/* Right: Image Composition */}
+          <div className="order-1 lg:order-2 relative">
+            <div className="relative aspect-[4/5] max-w-[520px] mx-auto lg:mx-0 lg:ml-auto">
+              {/* Main Image */}
+              <ImageReveal>
+                <div className="relative w-full aspect-[4/5] overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=900"
+                    alt="Asana Resort grand entrance"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </ImageReveal>
+
+              {/* Floating Image 1 - Pool */}
+              <Parallax speed={0.4} rotate={true}>
+                <motion.div
+                  style={{ rotate: floatingRotate }}
+                  className="absolute -bottom-10 -left-10 lg:-left-20 w-[55%] aspect-square floating-shadow z-20"
+                >
+                  <div className="relative w-full h-full bg-white p-3">
+                    <Image
+                      src="https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=500"
+                      alt="Infinity pool overlooking valley"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </motion.div>
+              </Parallax>
+
+              {/* Floating Image 2 - Suite */}
+              <Parallax speed={-0.3}>
+                <motion.div
+                  style={{ y: floatingY }}
+                  className="absolute -top-8 -right-8 w-[40%] aspect-[4/3] floating-shadow z-10"
+                >
+                  <div className="relative w-full h-full bg-white p-2">
+                    <Image
+                      src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=400"
+                      alt="Presidential suite interior"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </motion.div>
+              </Parallax>
+
+              {/* Decorative Frame */}
+              <motion.div
+                style={{ y: useTransform(smoothProgress, [0, 1], [-30, 30]) }}
+                className="absolute -top-8 -right-8 w-[70%] h-[70%] border-2 border-accent/40 -z-10"
+              />
+
+              {/* Award Badge */}
+              <ScrollReveal direction="right" distance={40}>
+                <div className="absolute bottom-20 right-0 lg:-right-12 bg-secondary text-white px-6 py-4 z-30">
+                  <div className="text-[11px] uppercase tracking-wider opacity-80 mb-1">
+                    Awarded
+                  </div>
+                  <div className="text-[18px] font-display">
+                    Best Luxury Resort 2024
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
         </div>
 
-        {/* Map and Floating Images Container */}
-        <div className="relative w-full flex justify-center items-center min-h-[500px] mt-12">
-          
-          {/* Vietnam Vector Map */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="relative w-[340px] h-auto lg:w-[400px]"
-          >
-            <img 
-              src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/svgs/60a2ee8ed236c3cda70c4f52_vietnam-5.svg" 
-              alt="Vietnam Map"
-              className="w-full h-auto grayscale-[0.2] brightness-[1.05]"
-            />
-          </motion.div>
-
-          {/* Floating Images Container */}
-          <div className="absolute inset-0 pointer-events-none">
-            
-            {/* Image 1: Top Right of Map */}
-            <motion.div 
-              initial={{ opacity: 0, x: 40, rotate: 5 }}
-              whileInView={{ opacity: 1, x: 0, rotate: 2 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
-              className="absolute top-[5%] right-[10%] lg:right-[18%] w-[180px] lg:w-[280px] z-20 pointer-events-auto"
-            >
-              <div className="bg-white p-0 shadow-[0px_20px_40px_rgba(0,0,0,0.05)] transition-all hover:scale-105 duration-500">
-                <Image 
-                  src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/images/60bf893254a432aca6666296_resort-2.jpg"
-                  alt="Resort View"
-                  width={280}
-                  height={350}
-                  className="w-full h-auto grayscale-[0.05] brightness-[1.02]"
-                />
-              </div>
-            </motion.div>
-
-            {/* Image 2: Bottom Left of Map */}
-            <motion.div 
-              initial={{ opacity: 0, x: -40, rotate: -8 }}
-              whileInView={{ opacity: 1, x: 0, rotate: -3 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
-              className="absolute bottom-[5%] left-[5%] lg:left-[12%] w-[160px] lg:w-[240px] z-20 pointer-events-auto"
-            >
-              <div className="bg-white p-0 shadow-[0px_20px_40px_rgba(0,0,0,0.05)] transition-all hover:scale-105 duration-500">
-                <Image 
-                  src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/images/60b50d8a57cf663705af6076_jernej-graj-rlNibgIqi4o-u-1.jpg"
-                  alt="Wellness Bath"
-                  width={240}
-                  height={300}
-                  className="w-full h-auto grayscale-[0.05] brightness-[1.1]"
-                />
-              </div>
-            </motion.div>
-
+        {/* Stats Section */}
+        <div className="mt-28 lg:mt-36">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-16">
+            {stats.map((stat, index) => (
+              <ScrollReveal
+                key={index}
+                direction="up"
+                distance={60}
+                scale={true}
+              >
+                <div className="text-center lg:text-left group">
+                  <motion.div
+                    className="text-[52px] md:text-[72px] font-display font-medium text-secondary leading-none mb-3"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    {stat.value}
+                  </motion.div>
+                  <div className="text-[13px] text-muted-foreground uppercase tracking-[0.15em]">
+                    {stat.label}
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Decorative Element */}
+      <Parallax speed={-0.2} className="absolute right-0 top-1/3 w-[400px] h-[600px] pointer-events-none hidden xl:block opacity-[0.03]">
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="0.3" />
+          <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.3" />
+          <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" strokeWidth="0.3" />
+        </svg>
+      </Parallax>
     </section>
   );
 };

@@ -1,36 +1,137 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏨 Asana Resort - Luxury Resort Website
 
-## Getting Started
+A premium, 5-star luxury resort website built with Next.js 15, featuring stunning animations, modern design, and an immersive user experience.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-Latest-ff69b4?style=flat-square)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+
+### 🎨 Premium Design
+- Sophisticated luxury resort aesthetic
+- Custom color palette with elegant typography
+- Responsive design optimized for all devices
+- High-quality Unsplash imagery throughout
+
+### 🎬 Stunning Animations
+- **Animated Loader** - Premium entry experience with lotus icon and particle effects
+- **Scroll-Scrub Animations** - Elements animate based on scroll position
+- **Parallax Effects** - Immersive depth on hero sections
+- **Staggered Reveals** - Content animates in sequence for visual flow
+- **Spring Physics** - Natural, bouncy interactions on hover states
+
+### 📄 Pages
+
+| Page | Description |
+|------|-------------|
+| **Home** | Hero with booking bar, welcome section, room slider, spa, dining, and special occasions |
+| **Rooms** | Filterable room grid with multiple view modes |
+| **Spa** | Wellness sanctuary with treatment menu and packages |
+| **Restaurant** | Fine dining experience with menu highlights |
+| **Gallery** | Masonry photo grid with lightbox viewer |
+| **Contact** | Contact form with interactive map and quick actions |
+
+### 🏆 Premium Touches
+- Forbes Travel Guide 5-Star badge
+- Michelin star recognition
+- World Luxury Spa Awards badge
+- Condé Nast Traveler testimonial
+
+## 🚀 Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) with App Router
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Carousel**: [Embla Carousel](https://www.embla-carousel.com/)
+- **Fonts**: Google Fonts (Playfair Display, Jost)
+
+## 📦 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/devagarwal07/Asana.git
+   cd Asana
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
+
+## 🛠️ Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with Turbopack |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+
+## 📁 Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── page.tsx           # Home page
+│   ├── rooms/             # Rooms listing & details
+│   ├── spa/               # Spa & wellness page
+│   ├── restaurant/        # Dining page
+│   ├── gallery/           # Photo gallery
+│   └── contact/           # Contact page
+├── components/
+│   ├── sections/          # Page sections (hero, navbar, footer, etc.)
+│   └── ui/                # Reusable UI components
+│       ├── loader.tsx     # Animated loader
+│       ├── loader-wrapper.tsx  # Loader state management
+│       └── scroll-animations.tsx  # Animation library
+└── lib/
+    └── animations.ts      # Animation utilities
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎯 Key Components
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Scroll Animations Library
+Custom scroll-based animations with:
+- `ScrollReveal` - Fade, slide, scale, blur effects
+- `TextReveal` - Word-by-word text animations
+- `ImageReveal` - Curtain reveal for images
+- `Parallax` - Speed-controlled parallax movement
+- `FadeInView` - Simple fade on viewport entry
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Loader System
+- Animated entry loader on first visit
+- Session storage to skip on subsequent visits
+- Context provider for coordinating animations
 
-## Learn More
+## 🌐 Live Demo
 
-To learn more about Next.js, take a look at the following resources:
+Visit the deployed site at: *Coming soon*
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is for demonstration purposes.
 
-## Deploy on Vercel
+## 👨‍💻 Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Dev Agarwal**
+- GitHub: [@devagarwal07](https://github.com/devagarwal07)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+<p align="center">
+  Made with ❤️ for luxury hospitality
+</p>

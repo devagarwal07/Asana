@@ -1,185 +1,422 @@
 "use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect } from "react";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
+import { Calendar, Users, ChevronDown, MapPin, Sun, Clock, Star } from "lucide-react";
+import { useLoading } from "@/components/ui/loader-wrapper";
 
 const HeroSection = () => {
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [adults, setAdults] = useState("2");
+  const [children, setChildren] = useState("0");
+  const { isLoaded } = useLoading();
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const backgroundY = useTransform(smoothProgress, [0, 1], ["0%", "30%"]);
+  const backgroundScale = useTransform(smoothProgress, [0, 1], [1, 1.2]);
+  const contentY = useTransform(smoothProgress, [0, 1], ["0%", "50%"]);
+  const contentOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0]);
+
+  const currentTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  // Staggered animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 60 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const scaleItemVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const slideLeftVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const slideRightVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const slideUpVariants = {
+    hidden: { opacity: 0, y: 80 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.9,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
   return (
-    <div className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden">
-      {/* Sticky Background Image */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden z-0">
-        <motion.div 
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ 
-            backgroundImage: `url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/images/60b501c8f9cb836be412f7d3_hero-homepage-13.jpg')`,
-            filter: 'brightness(0.85)'
+    <section ref={sectionRef} className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
+      {/* Background Image with Ken Burns Effect */}
+      <motion.div
+        initial={{ scale: 1.1, opacity: 0 }}
+        animate={isLoaded ? { scale: 1, opacity: 1 } : {}}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        style={{ y: backgroundY, scale: backgroundScale }}
+        className="absolute inset-0 z-0"
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2000')`,
+            animation: isLoaded ? "ken-burns 25s ease-in-out infinite alternate" : "none",
           }}
         />
-        {/* Hero Overlay Gradient */}
-        <div className="absolute inset-0 z-[1] bg-hero-overlay opacity-60 pointer-events-none" />
-        <div className="absolute inset-0 z-[1] bg-black/10 pointer-events-none" />
-      </div>
+        {/* Gradient Overlays */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isLoaded ? { opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/10 to-transparent"
+        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isLoaded ? { opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
+        />
+      </motion.div>
 
-      {/* Main Content Area */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-between pt-20">
-        <div className="flex-grow flex flex-col items-center justify-center text-center px-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-            className="max-w-[1160px] w-full"
+      {/* Location & Time Badge */}
+      <motion.div
+        variants={slideLeftVariants}
+        initial="hidden"
+        animate={isLoaded ? "visible" : "hidden"}
+        className="absolute top-28 left-6 md:left-12 z-10 hidden md:block"
+      >
+        <div className="p-4 bg-white/10 backdrop-blur-md border border-white/20 text-white">
+          <div className="flex items-center gap-3 mb-2">
+            <MapPin size={14} className="text-accent" />
+            <span className="text-[12px] uppercase tracking-wider">
+              Đà Lạt, Vietnam
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Clock size={14} className="text-accent" />
+            <span className="text-[12px]">{currentTime}</span>
+            <span className="text-[12px] flex items-center gap-1">
+              <Sun size={12} /> 24°C
+            </span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Rating Badge */}
+      <motion.div
+        variants={slideRightVariants}
+        initial="hidden"
+        animate={isLoaded ? "visible" : "hidden"}
+        className="absolute top-28 right-6 md:right-12 z-10 hidden md:block"
+      >
+        <div className="p-4 bg-secondary text-white text-center">
+          <div className="flex items-center justify-center gap-1 mb-1">
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
+                transition={{ delay: 0.8 + i * 0.1, duration: 0.3 }}
+              >
+                <Star size={14} fill="currentColor" className="text-accent" />
+              </motion.div>
+            ))}
+          </div>
+          <div className="text-[11px] uppercase tracking-wider opacity-80">
+            5-Star Luxury Resort
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Main Content */}
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative z-10 container pb-32 md:pb-40"
+      >
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={isLoaded ? "visible" : "hidden"}
+          className="max-w-[900px]"
+        >
+          <motion.span
+            variants={scaleItemVariants}
+            className="inline-block px-4 py-2 bg-accent/20 backdrop-blur-sm text-accent text-[11px] uppercase tracking-[0.2em] font-medium mb-6"
           >
-            <h1 className="hero-title text-white mb-6">
-              Find your nature self
-            </h1>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.9 }}
-              transition={{ duration: 1, delay: 1, ease: "easeOut" }}
-              className="text-white font-body text-[18px] md:text-[22px] tracking-wide mx-auto max-w-2xl leading-relaxed"
+            Vietnam's Premier Luxury Destination
+          </motion.span>
+
+          <motion.h1
+            variants={itemVariants}
+            className="text-white text-[48px] md:text-[72px] lg:text-[90px] font-display leading-[1.05] mb-6"
+          >
+            Where Luxury
+            <br />
+            <motion.span
+              initial={{ opacity: 0, x: -30 }}
+              animate={isLoaded ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="italic text-accent inline-block"
             >
-              Asana is a wellness resort in the green hills of Vietnam
+              Meets Serenity
+            </motion.span>
+          </motion.h1>
+
+          <motion.p
+            variants={itemVariants}
+            className="text-white/80 text-[17px] md:text-[19px] leading-relaxed max-w-[600px] mb-10"
+          >
+            Discover an extraordinary sanctuary nestled in the highlands of Vietnam.
+            Award-winning hospitality, world-class amenities, and breathtaking
+            natural beauty await.
+          </motion.p>
+
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap gap-4"
+          >
+            <motion.a
+              href="/rooms"
+              className="btn-primary text-[14px] px-8 py-4"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View Accommodations
+            </motion.a>
+            <motion.a
+              href="#explore"
+              className="btn-outline border-white/50 text-white hover:bg-white hover:text-primary text-[14px] px-8 py-4"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Explore Resort
+            </motion.a>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* Booking Bar */}
+      <motion.div
+        variants={slideUpVariants}
+        initial="hidden"
+        animate={isLoaded ? "visible" : "hidden"}
+        className="relative z-20 bg-white shadow-2xl mx-auto w-full max-w-6xl mb-8"
+      >
+        <div className="p-6 md:p-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
+            {/* Check In */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 1.0, duration: 0.5 }}
+              className="relative"
+            >
+              <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                Check In
+              </label>
+              <div className="relative">
+                <Calendar
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+                />
+                <input
+                  type="text"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  placeholder="Select date"
+                  onFocus={(e) => (e.target.type = "date")}
+                  className="w-full pl-11 pr-4 py-4 border border-border bg-subtle text-foreground text-[14px] focus:outline-none focus:border-secondary transition-colors"
+                />
+              </div>
             </motion.div>
-          </motion.div>
-        </div>
 
-        <div className="flex flex-col">
-          {/* Local Info (Time/Weather) - Left Side */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="relative z-20 w-full max-w-[1280px] mx-auto px-8 mb-4"
-          >
-            <div className="flex flex-col gap-3 md:gap-4 md:flex-row items-start md:items-center">
-              <div className="flex items-center gap-2 group cursor-pointer">
-                <img 
-                  src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/svgs/60a2ee8e255df881e89e8fbb_time-3.svg" 
-                  alt="Clock" 
-                  className="w-5 h-5 opacity-80"
+            {/* Check Out */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 1.1, duration: 0.5 }}
+              className="relative"
+            >
+              <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                Check Out
+              </label>
+              <div className="relative">
+                <Calendar
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
                 />
-                <span className="text-white text-[14px] md:text-[15px] font-body tracking-[0.05em]">Local time 6:45 PM</span>
-              </div>
-              <div className="flex items-center gap-2 group cursor-pointer md:ml-6">
-                <img 
-                  src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/svgs/60a2ee8dff3dfa6e9ca2f973_weather-4.svg" 
-                  alt="Weather" 
-                  className="w-5 h-5 opacity-80"
+                <input
+                  type="text"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  placeholder="Select date"
+                  onFocus={(e) => (e.target.type = "date")}
+                  className="w-full pl-11 pr-4 py-4 border border-border bg-subtle text-foreground text-[14px] focus:outline-none focus:border-secondary transition-colors"
                 />
-                <span className="text-white text-[14px] md:text-[15px] font-body tracking-[0.05em]">Sunny, 24° C</span>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* Booking Bar */}
-          <motion.div 
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.8, delay: 1.5, ease: "easeOut" }}
-            className="relative z-20 w-full bg-[#2A4434]"
-          >
-            <div className="max-w-[1280px] mx-auto">
-              <form className="flex flex-col lg:flex-row w-full">
-                {/* Check In */}
-                <div className="flex-1 border-r border-[#3d5a49] lg:border-r border-b lg:border-b-0">
-                  <div className="p-6">
-                    <label className="block text-[12px] font-medium uppercase tracking-[0.1em] text-[#D6D2C4]/70 mb-2">
-                      Check in
-                    </label>
-                    <input 
-                      type="text" 
-                      placeholder="Select date" 
-                      className="w-full bg-transparent text-white placeholder-[#C06B3E] font-body text-[16px] outline-none border-none focus:ring-0 cursor-pointer"
-                      readOnly
-                      defaultValue="Select date"
-                    />
-                  </div>
-                </div>
-
-                {/* Check Out */}
-                <div className="flex-1 border-r border-[#3d5a49] lg:border-r border-b lg:border-b-0">
-                  <div className="p-6">
-                    <label className="block text-[12px] font-medium uppercase tracking-[0.1em] text-[#D6D2C4]/70 mb-2">
-                      Check out
-                    </label>
-                    <input 
-                      type="text" 
-                      placeholder="Select date" 
-                      className="w-full bg-transparent text-white placeholder-[#C06B3E] font-body text-[16px] outline-none border-none focus:ring-0 cursor-pointer"
-                      readOnly
-                      defaultValue="Select date"
-                    />
-                  </div>
-                </div>
-
-                {/* Adults */}
-                <div className="flex-1 border-r border-[#3d5a49] lg:border-r border-b lg:border-b-0">
-                  <div className="p-6 relative group">
-                    <label className="block text-[12px] font-medium uppercase tracking-[0.1em] text-[#D6D2C4]/70 mb-2">
-                      Adults
-                    </label>
-                    <select className="w-full bg-transparent text-white font-body text-[16px] outline-none border-none focus:ring-0 cursor-pointer appearance-none">
-                      <option className="text-foreground">2</option>
-                      <option className="text-foreground">1</option>
-                      <option className="text-foreground">3</option>
-                      <option className="text-foreground">4</option>
-                    </select>
-                    <div className="absolute right-6 bottom-7 pointer-events-none opacity-50">
-                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="white"><path d="M1 1L6 6L11 1" strokeWidth="1.5"/></svg>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Children */}
-                <div className="flex-1 border-r border-[#3d5a49] lg:border-r border-b lg:border-b-0">
-                  <div className="p-6 relative">
-                    <label className="block text-[12px] font-medium uppercase tracking-[0.1em] text-[#D6D2C4]/70 mb-2">
-                      Children
-                    </label>
-                    <select className="w-full bg-transparent text-white font-body text-[16px] outline-none border-none focus:ring-0 cursor-pointer appearance-none">
-                      <option className="text-foreground">0</option>
-                      <option className="text-foreground">1</option>
-                      <option className="text-foreground">2</option>
-                    </select>
-                    <div className="absolute right-6 bottom-7 pointer-events-none opacity-50">
-                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="white"><path d="M1 1L6 6L11 1" strokeWidth="1.5"/></svg>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Booking Button */}
-                <button 
-                  type="button" 
-                  className="bg-[#C06B3E] hover:bg-[#A85930] transition-colors duration-300 lg:w-[220px] px-8 py-6 lg:py-0 flex items-center justify-center cursor-pointer"
+            {/* Adults */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 1.2, duration: 0.5 }}
+              className="relative"
+            >
+              <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                Adults
+              </label>
+              <div className="relative">
+                <Users
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+                />
+                <select
+                  value={adults}
+                  onChange={(e) => setAdults(e.target.value)}
+                  className="w-full pl-11 pr-10 py-4 border border-border bg-subtle text-foreground text-[14px] focus:outline-none focus:border-secondary appearance-none transition-colors"
                 >
-                  <span className="text-white uppercase font-body font-semibold tracking-[0.15em] text-[13px]">
-                    Book Now
-                  </span>
-                </button>
-              </form>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+                  {[1, 2, 3, 4, 5, 6].map((n) => (
+                    <option key={n} value={n}>
+                      {n} {n === 1 ? "Adult" : "Adults"}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                />
+              </div>
+            </motion.div>
 
-      <style jsx global>{`
-        .hero-title {
-          font-family: var(--font-display);
-          font-size: clamp(48px, 8vw, 85px);
-          line-height: 1.1;
-          letter-spacing: -0.02em;
-        }
-        @media (max-width: 768px) {
-          .hero-title {
-            font-size: 52px;
-          }
+            {/* Children */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 1.3, duration: 0.5 }}
+              className="relative"
+            >
+              <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                Children
+              </label>
+              <div className="relative">
+                <Users
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+                />
+                <select
+                  value={children}
+                  onChange={(e) => setChildren(e.target.value)}
+                  className="w-full pl-11 pr-10 py-4 border border-border bg-subtle text-foreground text-[14px] focus:outline-none focus:border-secondary appearance-none transition-colors"
+                >
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <option key={n} value={n}>
+                      {n} {n === 1 ? "Child" : "Children"}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                />
+              </div>
+            </motion.div>
+
+            {/* Submit */}
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 1.4, duration: 0.5 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="btn-primary py-4 text-[14px] font-semibold uppercase tracking-wider"
+            >
+              Check Availability
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isLoaded ? { opacity: 1 } : {}}
+        transition={{ delay: 1.8, duration: 0.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:block"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-2 text-white/60"
+        >
+          <span className="text-[10px] uppercase tracking-[0.2em]">Scroll</span>
+          <div className="w-[1px] h-8 bg-white/40" />
+        </motion.div>
+      </motion.div>
+
+      <style jsx>{`
+        @keyframes ken-burns {
+          0% { transform: scale(1) translate(0, 0); }
+          100% { transform: scale(1.1) translate(-2%, -1%); }
         }
       `}</style>
-    </div>
+    </section>
   );
 };
 
