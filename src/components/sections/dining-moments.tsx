@@ -1,140 +1,161 @@
 "use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import React, { useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { Clock, Utensils, Star, Award, Wine, ChefHat } from "lucide-react";
+import { ScrollReveal, Parallax, ImageReveal, TextReveal, FadeInView } from "@/components/ui/scroll-animations";
 
-const DiningMoments = () => {
+const experiences = [
+  {
+    icon: ChefHat,
+    name: "The Grand Restaurant",
+    time: "6:30 PM - 10:30 PM",
+    description: "Michelin-starred fine dining with valley views",
+    highlight: true,
+  },
+  {
+    icon: Wine,
+    name: "Wine Cellar",
+    time: "5:00 PM - 11:00 PM",
+    description: "2,000+ vintage collection with sommelier pairings",
+    highlight: false,
+  },
+  {
+    icon: Utensils,
+    name: "Sunrise Terrace",
+    time: "6:30 AM - 11:00 AM",
+    description: "Gourmet breakfast buffet with champagne service",
+    highlight: true,
+  },
+];
+
+const DiningSection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const imageY = useTransform(smoothProgress, [0, 1], ["-15%", "15%"]);
+  const imageScale = useTransform(smoothProgress, [0, 0.5, 1], [1.1, 1, 1.1]);
+
   return (
-    <div className="relative overflow-hidden">
-      {/* Decorative Leaf Icon (Left) - Using SVG from assets */}
-      <motion.div 
-        initial={{ opacity: 0, x: -50 }}
-        whileInView={{ opacity: 0.1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2 }}
-        className="absolute left-[-100px] top-[150px] w-[300px] h-[300px] pointer-events-none z-0"
-      >
-        <img 
-          src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/svgs/60a2ee8e0d09126e006b645d_leaf-right-11.svg" 
-          alt="" 
-          className="w-full h-full object-contain transform rotate-180"
-        />
-      </motion.div>
-
-      {/* Top Small Inset Image Section */}
-      <div className="bg-[#F1EFE9] pt-20 flex justify-center">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="relative"
-        >
-          <div className="w-[180px] h-[180px] md:w-[220px] md:h-[220px] overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="relative z-10 bg-background overflow-hidden"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[800px]">
+        {/* Left: Sticky Image */}
+        <div className="relative lg:sticky lg:top-0 lg:h-screen overflow-hidden">
+          <motion.div style={{ y: imageY, scale: imageScale }} className="absolute inset-0">
             <Image
-              src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/images/60a3fc028b488175c4a4257a_bowl-12.jpg"
-              alt="Dining bowl at Asana"
-              width={220}
-              height={220}
-              className="object-cover w-full h-full shadow-2xl transition-transform duration-700 hover:scale-110"
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1200"
+              alt="Michelin-starred dining at Asana Resort"
+              fill
+              className="object-cover"
             />
-          </div>
-        </motion.div>
-      </div>
+          </motion.div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/40 lg:bg-gradient-to-t lg:from-black/60 lg:via-black/20 lg:to-transparent" />
 
-      {/* Main Full-Width Image Section (Woman in Hammock) - Sticky Background */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden z-0">
-        <motion.div
-          initial={{ scale: 1.1 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="relative w-full h-full"
-        >
-          <Image
-            src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/images/60b4f11df67f609e202e666e_altalena-22.jpg"
-            alt="Unforgettable moments at Asana"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-        </motion.div>
-      </div>
-
-      {/* Content Section */}
-      <section className="bg-[#F1EFE9] px-6 py-24 md:py-32 relative z-10 shadow-[0_-50px_100px_rgba(0,0,0,0.1)]">
-        <div className="container mx-auto max-w-[1280px]">
-          <div className="text-center flex flex-col items-center">
-            {/* Tagline */}
-            <motion.h4 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="font-body text-[12px] font-medium uppercase tracking-[0.15em] text-[#C06B3E] mb-6"
-            >
-              RELAX TO THE SOUND OF THE WATERFALL
-            </motion.h4>
-
-            {/* Title */}
-            <motion.h2 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-display text-[42px] md:text-[56px] lg:text-[60px] leading-[1.1] text-[#222222] mb-8"
-            >
-              Live unforgettable moments
-            </motion.h2>
-
-            {/* Description */}
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="font-body text-[16px] md:text-[18px] leading-[1.6] text-[#222222] max-w-[700px] text-balance opacity-80 mb-16"
-            >
-              Indulge in culinary excellence at Asana. Our chefs source local ingredients to create dishes that tell stories of tradition and innovation, served in breathtaking settings.
-            </motion.p>
-
-            {/* Button */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-4"
-            >
-              <a
-                href="#"
-                className="inline-block border border-[#C06B3E] px-10 py-5 font-body text-[13px] font-semibold uppercase tracking-[0.1em] text-[#C06B3E] hover:bg-[#C06B3E] hover:text-white transition-all duration-300"
-              >
-                Explore all experiences
-              </a>
-            </motion.div>
-          </div>
+          {/* Award Badge */}
+          <FadeInView direction="up" className="absolute bottom-12 left-8 lg:left-12 right-8">
+            <div className="p-6 bg-white/95 backdrop-blur-sm max-w-[320px]">
+              <div className="flex items-center gap-2 mb-3">
+                <Star size={18} className="text-secondary" fill="currentColor" />
+                <Star size={18} className="text-secondary" fill="currentColor" />
+                <Award size={22} className="text-secondary ml-2" />
+              </div>
+              <h4 className="text-[20px] font-display text-foreground mb-2">
+                2 Michelin Stars
+              </h4>
+              <p className="text-[13px] text-muted-foreground">
+                Chef Nguyen's innovative cuisine blending French techniques with Vietnamese soul
+              </p>
+            </div>
+          </FadeInView>
         </div>
-      </section>
 
-      {/* Decorative Leaf Icon (Bottom Right) */}
-      <motion.div 
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 0.1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2 }}
-        className="absolute right-[-120px] bottom-[-50px] w-[350px] h-[350px] pointer-events-none z-0"
-      >
-        <img 
-          src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/892bb068-b17a-42a0-a26a-9e038bc43081-asanaresort-webflow-io/assets/svgs/60a2ee8e0d09126e006b645d_leaf-right-11.svg" 
-          alt="" 
-          className="w-full h-full object-contain"
-        />
-      </motion.div>
-    </div>
+        {/* Right: Content */}
+        <div className="p-10 lg:p-16 xl:p-24 flex flex-col justify-center bg-subtle">
+          <ScrollReveal direction="up" distance={50} scale={true}>
+            <span className="label-caps block mb-4">
+              Culinary Excellence
+            </span>
+          </ScrollReveal>
+
+          <TextReveal>
+            <h2 className="text-foreground mb-6">
+              World-Class
+              <br />
+              <span className="italic text-secondary">Dining</span>
+            </h2>
+          </TextReveal>
+
+          <ScrollReveal direction="up" distance={40}>
+            <div className="divider mb-8" />
+          </ScrollReveal>
+
+          <ScrollReveal direction="up" distance={50} blur={true}>
+            <p className="text-muted-foreground text-[17px] leading-[1.9] mb-10 max-w-[520px]">
+              Experience culinary artistry at its finest. Our Michelin-starred
+              restaurant showcases the best of Vietnamese gastronomy, reimagined
+              through a contemporary lens by our award-winning culinary team.
+              From sunrise champagne breakfasts to candlelit dinners, every
+              meal is an unforgettable journey.
+            </p>
+          </ScrollReveal>
+
+          {/* Dining Experiences */}
+          <div className="space-y-5 mb-10">
+            {experiences.map((exp, index) => (
+              <ScrollReveal key={index} direction="up" distance={40} scale={true}>
+                <motion.div
+                  className={`p-6 transition-all duration-500 ${exp.highlight
+                      ? "bg-white shadow-lg hover:shadow-2xl"
+                      : "bg-background hover:bg-white hover:shadow-xl"
+                    }`}
+                  whileHover={{ x: 10 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex gap-4">
+                      <exp.icon size={24} className="text-secondary flex-shrink-0 mt-1" />
+                      <div>
+                        <h4 className="text-[18px] font-display text-foreground mb-1">
+                          {exp.name}
+                        </h4>
+                        <p className="text-[14px] text-muted-foreground">
+                          {exp.description}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-[12px] text-secondary shrink-0 bg-secondary/10 px-3 py-2">
+                      <Clock size={14} />
+                      {exp.time}
+                    </div>
+                  </div>
+                </motion.div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal direction="up" distance={40}>
+            <div className="flex flex-wrap gap-4">
+              <Link href="/restaurant" className="btn-primary">
+                View Menus
+              </Link>
+              <Link href="/contact" className="btn-outline">
+                Reserve a Table
+              </Link>
+            </div>
+          </ScrollReveal>
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default DiningMoments;
+export default DiningSection;
