@@ -46,13 +46,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="theme-color" content="#1E3A2F" />
       </head>
       <body
         className={`${playfair.variable} ${jost.variable} antialiased bg-background text-foreground`}
+        suppressHydrationWarning
       >
         {children}
       </body>

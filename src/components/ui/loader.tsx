@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface LoaderProps {
@@ -8,9 +8,41 @@ interface LoaderProps {
     duration?: number;
 }
 
+// Generate fixed particle positions to avoid hydration mismatch
+const PARTICLE_POSITIONS = [
+    { startX: 0.08, endX: 0.15 },
+    { startX: 0.84, endX: 0.73 },
+    { startX: 0.40, endX: 0.39 },
+    { startX: 0.25, endX: 0.74 },
+    { startX: 0.24, endX: 0.73 },
+    { startX: 0.65, endX: 0.73 },
+    { startX: 0.06, endX: 0.72 },
+    { startX: 0.82, endX: 0.62 },
+    { startX: 0.51, endX: 0.52 },
+    { startX: 0.84, endX: 0.23 },
+    { startX: 0.79, endX: 0.83 },
+    { startX: 0.03, endX: 0.12 },
+    { startX: 0.15, endX: 0.34 },
+    { startX: 0.22, endX: 0.96 },
+    { startX: 0.41, endX: 0.76 },
+    { startX: 0.26, endX: 0.78 },
+    { startX: 0.08, endX: 0.55 },
+    { startX: 0.28, endX: 0.54 },
+    { startX: 0.35, endX: 0.14 },
+    { startX: 0.49, endX: 0.16 },
+];
+
+const PARTICLE_DELAYS = [0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 0.15, 0.35, 0.55, 0.75, 0.95, 1.15, 0.25, 0.45];
+const PARTICLE_DURATIONS = [5, 6, 4.5, 5.5, 6.5, 4, 5.2, 6.2, 4.8, 5.8, 6.8, 4.2, 5.4, 6.4, 4.6, 5.6, 6.6, 4.4, 5.3, 6.3];
+
 const Loader: React.FC<LoaderProps> = ({ onComplete, duration = 3000 }) => {
     const [progress, setProgress] = useState(0);
     const [isComplete, setIsComplete] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     useEffect(() => {
         const startTime = Date.now();
@@ -40,29 +72,31 @@ const Loader: React.FC<LoaderProps> = ({ onComplete, duration = 3000 }) => {
                     transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
                     className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-primary overflow-hidden"
                 >
-                    {/* Animated Background Particles */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        {[...Array(20)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                className="absolute w-1 h-1 bg-accent/30 rounded-full"
-                                initial={{
-                                    x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                                    y: (typeof window !== 'undefined' ? window.innerHeight : 1080) + 50,
-                                }}
-                                animate={{
-                                    y: -50,
-                                    x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                                }}
-                                transition={{
-                                    duration: Math.random() * 4 + 3,
-                                    repeat: Infinity,
-                                    ease: "linear",
-                                    delay: Math.random() * 2,
-                                }}
-                            />
-                        ))}
-                    </div>
+                    {/* Animated Background Particles - only render after mount to avoid hydration mismatch */}
+                    {isMounted && (
+                        <div className="absolute inset-0 overflow-hidden">
+                            {PARTICLE_POSITIONS.map((pos, i) => (
+                                <motion.div
+                                    key={i}
+                                    className="absolute w-1 h-1 bg-accent/30 rounded-full"
+                                    initial={{
+                                        x: pos.startX * window.innerWidth,
+                                        y: window.innerHeight + 50,
+                                    }}
+                                    animate={{
+                                        y: -50,
+                                        x: pos.endX * window.innerWidth,
+                                    }}
+                                    transition={{
+                                        duration: PARTICLE_DURATIONS[i],
+                                        repeat: Infinity,
+                                        ease: "linear",
+                                        delay: PARTICLE_DELAYS[i],
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    )}
 
                     {/* Decorative Circles */}
                     <motion.div
