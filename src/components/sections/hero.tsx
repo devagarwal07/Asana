@@ -134,30 +134,6 @@ const HeroSection = () => {
         />
       </motion.div>
 
-      {/* Location & Time Badge */}
-      <motion.div
-        variants={slideLeftVariants}
-        initial="hidden"
-        animate={isLoaded ? "visible" : "hidden"}
-        className="absolute top-28 left-6 md:left-12 z-10 hidden md:block"
-      >
-        <div className="p-4 bg-white/10 backdrop-blur-md border border-white/20 text-white">
-          <div className="flex items-center gap-3 mb-2">
-            <MapPin size={14} className="text-accent" />
-            <span className="text-[12px] uppercase tracking-wider">
-              Đà Lạt, Vietnam
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Clock size={14} className="text-accent" />
-            <span className="text-[12px]">{currentTime}</span>
-            <span className="text-[12px] flex items-center gap-1">
-              <Sun size={12} /> 24°C
-            </span>
-          </div>
-        </div>
-      </motion.div>
-
       {/* Rating Badge */}
       <motion.div
         variants={slideRightVariants}
