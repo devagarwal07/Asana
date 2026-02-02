@@ -163,7 +163,7 @@ const HeroSection = () => {
       {/* Main Content */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 container pb-32 md:pb-40"
+        className="relative z-10 container pt-32 md:pt-27 pb-25 md:pb-40"
       >
         <motion.div
           variants={containerVariants}
@@ -171,13 +171,6 @@ const HeroSection = () => {
           animate={isLoaded ? "visible" : "hidden"}
           className="max-w-[900px]"
         >
-          <motion.span
-            variants={scaleItemVariants}
-            className="inline-block px-4 py-2 bg-accent/20 backdrop-blur-sm text-accent text-[11px] uppercase tracking-[0.2em] font-medium mb-6"
-          >
-            Vietnam's Premier Luxury Destination
-          </motion.span>
-
           <motion.h1
             variants={itemVariants}
             className="text-white text-[48px] md:text-[72px] lg:text-[90px] font-display leading-[1.05] mb-6"
